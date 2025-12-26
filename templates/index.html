@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medicine Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <h1>Medicine Tracker</h1>
+
+    <h2>Add Medicine</h2>
+
+    <form method="POST">
+        <label>Medicine Name:</label><br>
+        <input type="text" name="medicine_name" required><br><br>
+
+        <label>Total Stock:</label><br>
+        <input type="number" name="stock" min="0" required><br><br>
+
+        <button type="submit">Add Medicine</button>
+    </form>
+
+    <hr>
+
+   <h2>Saved Medicines</h2>
+
+{% if medicines %}
+    <ul>
+        {% for med in medicines %}
+            <li>
+                <strong>{{ med.name }}</strong> — Stock: {{ med.stock }}
+
+                <form method="POST" style="display:inline;">
+                    <input type="hidden" name="taken_name" value="{{ med.name }}">
+                    <button type="submit">Taken</button>
+                </form>
+
+                {% if med.stock <= 3 %}
+                    <span style="color:red;">⚠ Low Stock</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No medicines added yet.</p>
+{% endif %}
