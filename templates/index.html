@@ -32,12 +32,15 @@
             {% endif %}
 
             <div class="reminder">
-                ⏰ Reminder: {{ med.reminder }}
+    ⏰ Reminder: {{ med.reminder }}
 
-                {% if med.reminder <= now %}
-                    <span class="due">Due Now</span>
-                {% endif %}
-            </div>
+    {% if med.reminder <= now_time and med.last_taken != today %}
+        <span class="due">Due Now</span>
+    {% else %}
+        <span class="done">✔ Taken Today</span>
+    {% endif %}
+</div>
+
 
             <form method="POST" class="actions">
                 <button name="taken" value="{{ med.name }}">Taken</button>
