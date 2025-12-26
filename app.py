@@ -1,14 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for
-from datetime import datetime
+from datetime import datetime, date
 
 app = Flask(__name__)
 
-# In-memory storage
 medicines = []
 
 @app.route("/", methods=["GET", "POST"])
 def home():
     global medicines
+
+    today = date.today().isoformat()
 
     if request.method == "POST":
 
@@ -18,7 +19,7 @@ def home():
             stock = int(request.form.get("stock"))
             reminder = request.form.get("reminder")
 
-            # ❌ Prevent duplicate medicine names
+            # Prevent duplicate names
             for med in medicines:
                 if med["name"].lower() == name.lower():
                     return redirect(url_for("home"))
@@ -26,7 +27,8 @@ def home():
             medicines.append({
                 "name": name,
                 "stock": stock,
-                "reminder": reminder
+                "reminder": reminder,
+                "last_taken": None
             })
 
         # MARK AS TAKEN
@@ -35,6 +37,7 @@ def home():
             for med in medicines:
                 if med["name"] == name and med["stock"] > 0:
                     med["stock"] -= 1
+                    med["last_taken"] = today  # ✅ Mark taken today
 
         # DELETE MEDICINE
         if "delete" in request.form:
@@ -43,10 +46,14 @@ def home():
 
         return redirect(url_for("home"))
 
-    # Current time for reminder comparison
-    now = datetime.now().strftime("%H:%M")
+    now_time = datetime.now().strftime("%H:%M")
 
-    return render_template("index.html", medicines=medicines, now=now)
+    return render_template(
+        "index.html",
+        medicines=medicines,
+        now_time=now_time,
+        today=today
+    )
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
