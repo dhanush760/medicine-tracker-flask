@@ -11,43 +11,39 @@
 <div class="card">
     <h2>Add Medicine</h2>
     <form method="POST">
-        <label>Medicine Name</label>
-        <input type="text" name="name" required>
+        <input type="text" name="name" placeholder="Medicine Name" required>
+        <input type="number" name="stock" placeholder="Total Stock" required>
+        <input type="time" name="reminder" required>
 
-        <label>Total Stock</label>
-        <input type="number" name="stock" required>
-
-        <label>Reminder Time</label>
-        <input type="time" name="reminder_time" required>
-
-        <button type="submit">Add Medicine</button>
+        <button type="submit" name="add_medicine">Add Medicine</button>
     </form>
 </div>
-
-<hr>
 
 <h2>Saved Medicines</h2>
 
 {% if medicines %}
     {% for med in medicines %}
-        <div class="medicine">
-            <strong>{{ med.name }}</strong>
-            <span>Stock: {{ med.stock }}</span>
-            <span>⏰ {{ med.reminder_time }}</span>
+        <div class="medicine-card">
 
-            <form method="POST" class="inline">
-                <input type="hidden" name="taken_name" value="{{ med.name }}">
-                <button class="taken">Taken</button>
-            </form>
-
-            <form method="POST" class="inline">
-                <input type="hidden" name="delete_name" value="{{ med.name }}">
-                <button class="delete">❌</button>
-            </form>
+            <b>{{ med.name }}</b> — Stock: {{ med.stock }}
 
             {% if med.stock <= 3 %}
                 <span class="low">⚠ Low Stock</span>
             {% endif %}
+
+            <div class="reminder">
+                ⏰ Reminder: {{ med.reminder }}
+
+                {% if med.reminder <= now %}
+                    <span class="due">Due Now</span>
+                {% endif %}
+            </div>
+
+            <form method="POST" class="actions">
+                <button name="taken" value="{{ med.name }}">Taken</button>
+                <button name="delete" value="{{ med.name }}" class="delete">❌</button>
+            </form>
+
         </div>
     {% endfor %}
 {% else %}
