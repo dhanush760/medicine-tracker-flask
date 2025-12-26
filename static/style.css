@@ -61,3 +61,9 @@ button {
 .delete {
     background: #d9534f;
 }
+.done {
+    color: green;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
