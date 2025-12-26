@@ -58,3 +58,13 @@ li {
     font-weight: bold;
     margin-left: 10px;
 }
+
+.delete {
+    background: #e74c3c;
+    margin-left: 5px;
+}
+
+.delete:hover {
+    background: #c0392b;
+}
+
